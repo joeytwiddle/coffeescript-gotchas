@@ -190,11 +190,11 @@ an extra line at the end with just the closing `)`.  Yuck!
 
 ## Plus can mean something special if unevenly padded
 
-  a + "," + b      =>      a + "," + b;
+    a + "," + b      =>      a + "," + b;
 
-  a+","+b          =>      a + "," + b;
+    a+","+b          =>      a + "," + b;
 
-  a +","+ b        =>      a(+"," + b);   // oops!
+    a +","+ b        =>      a(+"," + b);   // oops!
 
 
 ## You are forced to declare your callbacks in reverse
