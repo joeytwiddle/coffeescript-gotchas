@@ -12,6 +12,7 @@ done that in Javascript.
 - Use Coffeescript's `for .. in` for Arrays.
 - Use Coffeescript's `for .. of` for Objects.
 
+```
     for i,o in [ 'a', 'b', 'c' ]
       # i=0 o='a'
       # i=1 o='b'
@@ -21,6 +22,7 @@ done that in Javascript.
       # k='a' v=10
       # k='b' v=20
       # k='c' v=30
+```
 
 
 ## Accidentally returning a list comprehension.
