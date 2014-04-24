@@ -34,7 +34,7 @@ If the last statement in your function is a loop, in many cases Coffeescript
 will believe that you wanted to return the result of that loop (even though the
 loop is not assigned to any variable).  If actually you wanted to return
 nothing, and don't want to build an array of results for that loop, then put
-"return" or "null" on the last line.
+`return` or `undefined` on the last line.
 
     consumePies: (pies) ->
       for p in pies
