@@ -13,15 +13,15 @@ done that in Javascript.
 - Use Coffeescript's `for .. of` for **Objects**.
 
 ```
-    for i,o in [ 'a', 'b', 'c' ]
-      # i=0 o='a'
-      # i=1 o='b'
-      # i=2 o='c'
+for i,o in [ 'a', 'b', 'c' ]
+  # i=0 o='a'
+  # i=1 o='b'
+  # i=2 o='c'
 
-    for k,v of { a: 10, b: 20, c: 30 }
-      # k='a' v=10
-      # k='b' v=20
-      # k='c' v=30
+for k,v of { a: 10, b: 20, c: 30 }
+  # k='a' v=10
+  # k='b' v=20
+  # k='c' v=30
 ```
 
 It's not too hard to remember.  An item lives "in" a list.  Keys are properties
