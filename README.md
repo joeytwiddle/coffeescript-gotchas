@@ -28,7 +28,7 @@ It's not too hard to remember.  An item lives "in" a list.  Keys are properties
 "of" objects.
 
 
-## Accidentally returning a list comprehension.
+## Accidentally returning a list comprehension
 
 If the last statement in your function is a loop, in many cases Coffeescript
 will believe that you wanted to return the result of that loop (even though the
