@@ -4,7 +4,7 @@ These are some of the things that tripped me up when I started to write
 Coffeescript.  They may be useful to new Coffeescript developers.
 
 
-# Coffeescript's `for .. in` is *not* Javascript's `for .. in`!
+## Coffeescript's `for .. in` is *not* Javascript's `for .. in`!
 
 So don't use Coffeescript's `for .. in` for Objects, even though you would have
 done that in Javascript.
@@ -23,7 +23,7 @@ done that in Javascript.
       # k='c' v=30
 
 
-# Accidentally returning a list comprehension.
+## Accidentally returning a list comprehension.
 
 If the last statement in your function is a loop, in many cases Coffeescript
 will believe that you wanted to return the result of that loop (even though the
@@ -51,7 +51,7 @@ More recent versions of Coffeescript have become better at avoiding this,
 although I don't know how the decision is made.
 
 
-# There is no ternary
+## There is no ternary
 
 The ternary operator is:
 
@@ -77,7 +77,7 @@ Coffeescript has some other shortcuts which are useful in specific situations.
 LiveScript introduces a nice case-like `| cond = result` syntax.
 
 
-# Using `return` to return an object literal at the end of a function
+## Using `return` to return an object literal at the end of a function
 
 This can cause you more trouble than it's worth.
 
@@ -112,7 +112,7 @@ Yes that is how Coffeescript does it!  The empty line is optional but I find it
 clearer.
 
 
-# You cannot shadow outer variables (within a file).
+## You cannot shadow outer variables (within a file).
 
 If, inside a function, you assign a variable which was declared somewhere above
 the function, no local variable will be created, but the outer variable will be
@@ -126,7 +126,7 @@ see if it has been used anywhere else in the file (specifically in a parent or
 child scope of the current scope).
 
 
-# Arguments may be passed without brackets - is that good?
+## Arguments may be passed without brackets - is that good?
 
 For example you can do `parseInt '5', 10` but a call without arguments *must
 always* use `()`s, e.g. `Math.random()`.  Sometimes I would forget, and type
@@ -147,7 +147,7 @@ This looks inconsistent.  Partly for that reason, I use parentheses on most of
 my function calls.
 
 
-# Another reason to use brackets: function calls are greedy with arguments
+## Another reason to use brackets: function calls are greedy with arguments
 
 Without brackets, there is ambiguity regarding where your parameters are going,
 requiring extra cognition for the developer.  Sometimes arguments you intended
@@ -176,7 +176,7 @@ becomes
 I find using brackets is clearer and avoids any ambiguity.
 
 
-# When to skip brackets
+## When to skip brackets
 
 There is one case when skipping the parentheses is fantastic, and that is for
 a "trailing callback" (when you pass a callback function as the last argument):
@@ -188,7 +188,7 @@ In this case if you have used brackets for the call to `console` you would need
 an extra line at the end with just the closing `)`.  Yuck!
 
 
-# Plus can mean something special if unevenly padded
+## Plus can mean something special if unevenly padded
 
   a + "," + b      =>      a + "," + b;
 
@@ -197,7 +197,7 @@ an extra line at the end with just the closing `)`.  Yuck!
   a +","+ b        =>      a(+"," + b);   // oops!
 
 
-# You are forced to declare your callbacks in reverse
+## You are forced to declare your callbacks in reverse
 
 This will work:
 
@@ -262,16 +262,16 @@ this pattern a lot, you may find yourself sharing the init var between scopes
 
 If you want to call a function immediately after defining it:
 
-  myObject = ( ->
-    privateThing = 3
-    publicThing: -> privateThing*2
-  )()
+    myObject = ( ->
+      privateThing = 3
+      publicThing: -> privateThing*2
+    )()
 
 You can avoid the brackets by using the `do` keyword:
 
-  myObject = do ->
-    privateThing = 3
-    publicThing: -> privateThing*2
+    myObject = do ->
+      privateThing = 3
+      publicThing: -> privateThing*2
 
 
 # Assistance for Vim users
