@@ -1,0 +1,166 @@
+I think it's time to document these, just to see how many there are!
+
+
+- Accidentally returning a list comprehension.  If the last statement in your
+  function is a loop, in many cases Coffeescript will believe that you wanted
+  to return the result of that loop (even though the loop is not assigned to
+  any variable).  If actually you wanted to return nothing, and don't want to
+  build an array of results for that loop, then put "return" or "null" on the
+  last line.
+
+  consumePies: (pies) ->
+    for p in pies
+      p.consume()
+
+  That generates and returns a new array of the things p.consume() returned.
+  There is memory and processing overhead to doing this, but you won't notice
+  CS is doing it unless you check the code.
+
+
+- There is no ternary.  You must use the *longer* `if ... then ... else ...` !
+
+  Writing a function to do ternary would be just silly:
+
+    ternPre  =   (cond,a,b) -> if cond then a else b
+    ternPost = (cond,fA,fB) -> if cond then fA() else fB()
+
+    x = if x<5 then x else 10-x
+
+    x = ternPre x<5, x, 10-x
+
+    x = ternPost x<5, (->x), ->10-x
+
+  (LiveScript introduces a nice case-like | cond = result syntax.)
+
+
+- Using "return" to return an object literal at the end of a function can cause
+  you more trouble than it's worth.  You are better of just placing the object
+  literal directly at the end without a return.
+
+  I think the trouble was:
+
+    return
+      a: 1
+      b: 2
+
+  would simply return, it wouldn't return the object.  You had to use
+  `return \` which is ugly and easy to forget.
+
+
+- You cannot shadow outer variables (within a file).  You may recognise this
+  from other languages.  How to avoid?  When you introduce a new variable,
+  consider searching to see if it has been used anywhere else in the file
+  (specifically in a parent or child scope of current).
+
+
+- Arguments may be passed without brackets, e.g. `parseInt '5', 10` but
+  calls without arguments must always use a `()`s, e.g. "Math.random()".
+  Sometimes I would forget, and type something like:
+
+    print "Hi mum"
+    print
+    print "Y U no blank line?"
+
+  or even dumber:
+
+    x = Math.cos angle
+    y = Math.sin angle
+    z = Math.random
+
+
+- Anyway gotcha if you leave our brackets, is cognitive ambiguity regarding
+  where your parameters are going.  Sometimes arguments you intended for one
+  function will actually be passed to the other.
+
+    subtractNumbers 12, addNumbers 5, 7
+
+  The solution?  Use more brackets!  In fact I continue to use brackets in most
+  of my Coffeescript code, I find it looks clearer and avoids any ambiguity.
+
+  But there is one time that not using brackets is fantastic, and that is for a
+  trailing callback:
+
+    fs.readFile filename, (err,contents) ->
+      console.log "Contents of #{filename} are:",contents
+
+
+- Plus can mean something special if unevenly padded
+
+  a + "," + b      =>      a + "," + b;
+
+  a+","+b          =>      a + "," + b;
+
+  a +","+ b        =>      a(+"," + b);   // oops
+
+
+- Function calls are greedy with arguments:
+
+    Math.sin t/77 + Math.cos t/99         # CS
+
+  becomes
+
+    Math.sin(t / 77 + Math.cos(t / 99))   # JS
+
+
+- You are forced to declare your callbacks in reverse:
+
+  This will work:
+
+    setTimeout( -> callMeLater , 2000 )
+
+    callMeLater = -> alert("Done")
+
+  But this will not:
+
+    setTimeout( callMeLater , 2000 )
+
+    callMeLater = -> alert("Done")
+
+  Because we try to use callMeLater before it was defined.
+  This would have actually worked fine in Javascript!  (Although it's not
+  advisable, it can be dangerous inside conditional blocks)!
+  Unfortunately in the case above, there won't even be an error, just a big
+  black nothing - fiddly to debug!
+
+  So you need to do define the callback first (even though it happens last):
+
+    callMeLater = -> alert("Done")
+
+    setTimeout( callMeLater , 2000 )
+
+  In other words, you must write your code backwards.  This messes up the flow
+  when reading.  To avoid this, don't name your callbacks unless you have to,
+  just define them inline.
+
+    setTimeout( -> alert("Done") , 2000 )
+
+  One option if it's really bothering you, is to defer initialisation:
+
+    init = -> setTimeout( callMeLater, 2000 )
+
+    callMeLater = -> alert("Done")
+
+    init()
+
+  Which is fine provided you don't want to pass things to the later callback
+  via scope.  Although if you use this pattern a lot, you may find yourself
+  sharing the init var between scopes (not that it really matters).
+
+
+
+# What follows are not gotchas, but tips
+
+If you want to call a function immediately after calling it:
+
+  myObject = ( ->
+    privateThing = 3
+    publicThing: -> privateThing*2
+  )()
+
+You can avoid the brackets by using the `do` keyword:
+
+  myObject = do ->
+    privateThing = 3
+    publicThing: -> privateThing*2
+
+
