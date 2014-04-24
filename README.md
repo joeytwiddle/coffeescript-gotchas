@@ -58,13 +58,16 @@ although I don't know how the decision is made.
 
 ## There is no ternary
 
-The ternary operator is:
+In Javascript the ternary operator is:
 
     condition ? result_if_true : result_if_false
 
-But in Coffeescript you must use the *longer*
+But in Coffeescript you must use the *longer*:
 
     if condition then result_if_true else result_if_false
+
+However Coffeescript does have some other shortcuts which are useful in
+specific situations (e.g. the existence operator `?`).
 
 You *could* write a function to do ternary but that would be silly:
 
@@ -73,11 +76,9 @@ You *could* write a function to do ternary but that would be silly:
 
     x = if x<5 then x else 10-x
 
-    x = ternPre x<5, x, 10-x
+    x = ternPre x<5, x, 10-x             # Always evaluates both results
 
-    x = ternPost x<5, (->x), ->10-x
-
-Coffeescript has some other shortcuts which are useful in specific situations.
+    x = ternPost x<5, (->x), ->10-x      # Longer than if-then-else!
 
 LiveScript introduces a nice case-like `| cond = result` syntax.
 
