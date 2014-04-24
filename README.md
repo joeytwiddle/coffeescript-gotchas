@@ -40,7 +40,7 @@ nothing, and don't want to build an array of results for that loop, then put
       for p in pies
         p.consume()
 
-That generates and returns a new array of the things p.consume() returned.
+That generates and returns a new array of the things `p.consume()` returned.
 There is memory and processing overhead to doing this, but it probably won't
 break your program, so you won't notice Coffeescript is doing it unless you
 check the code.
