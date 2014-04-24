@@ -4,13 +4,13 @@ These are some of the things that tripped me up when I started to write
 Coffeescript.  They may be useful to new Coffeescript developers.
 
 
-## Coffeescript's `for .. in` is *not* Javascript's `for .. in`!
+## Coffeescript's `for..in` is *not* Javascript's `for..in`!
 
-So don't use Coffeescript's `for .. in` for Objects, even though you would have
+Don't use Coffeescript's `for .. in` for Objects, even though you would have
 done that in Javascript.
 
-- Use Coffeescript's `for .. in` for Arrays.
-- Use Coffeescript's `for .. of` for Objects.
+- Use Coffeescript's `for .. in` for **Arrays**.
+- Use Coffeescript's `for .. of` for **Objects**.
 
 ```
     for i,o in [ 'a', 'b', 'c' ]
@@ -23,6 +23,9 @@ done that in Javascript.
       # k='b' v=20
       # k='c' v=30
 ```
+
+It's not too hard to remember.  An item lives "in" a list.  Keys are properties
+"of" objects.
 
 
 ## Accidentally returning a list comprehension.
@@ -114,7 +117,7 @@ Yes that is how Coffeescript does it!  The empty line is optional but I find it
 clearer.
 
 
-## You cannot shadow outer variables (within a file).
+## You cannot shadow outer variables (within a file)
 
 If, inside a function, you assign a variable which was declared somewhere above
 the function, no local variable will be created, but the outer variable will be
@@ -149,29 +152,30 @@ This looks inconsistent.  Partly for that reason, I use parentheses on most of
 my function calls.
 
 
-## Another reason to use brackets: function calls are greedy with arguments
+## Coffeescript is greedy when parsing parameters
 
-Without brackets, there is ambiguity regarding where your parameters are going,
-requiring extra cognition for the developer.  Sometimes arguments you intended
-for one function will actually be passed to the other.
+Another reason to use brackets.  Without brackets, there is ambiguity regarding
+where your parameters are going, requiring extra cognition for the developer.
+Sometimes arguments you intended for one function will actually be passed to
+the other.  For example:
 
     subtractNumbers 12, addNumbers 5,7
 
-Is this
+Is that:
 
     subtractNumbers(12, addNumbers(5,7))
 
-or
+or:
 
     subtractNumbers(12, addNumbers(5), 7)
 
 ?
 
-Since function calls are greedy
+Since function calls are greedy:
 
     Math.sin t/77 + Math.cos t/99         # CS
 
-becomes
+becomes:
 
     Math.sin(t / 77 + Math.cos(t / 99))   // JS
 
@@ -190,7 +194,7 @@ In this case if you have used brackets for the call to `console` you would need
 an extra line at the end with just the closing `)`.  Yuck!
 
 
-## Plus can mean something special if unevenly padded
+## Plus means something special if unevenly padded
 
     a + "," + b      =>      a + "," + b;
 
