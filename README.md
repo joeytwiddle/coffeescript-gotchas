@@ -24,17 +24,15 @@ for k,v of { a: 10, b: 20, c: 30 }
   # k='c' v=30
 ```
 
-It's not too hard to remember.  An item lives "in" a list.  Keys are properties
-"of" objects.
+It's not too hard to remember.  An item lives *in* a list.  Keys are properties
+*of* objects.
 
 
 ## Accidentally returning a list comprehension
 
 If the last statement in your function is a loop, in many cases Coffeescript
 will believe that you wanted to return the result of that loop (even though the
-loop is not assigned to any variable).  If actually you wanted to return
-nothing, and don't want to build an array of results for that loop, then put
-`return` or `undefined` on the last line.
+loop is not assigned to any variable).
 
     consumePies: (pies) ->
       for p in pies
@@ -45,7 +43,8 @@ There is memory and processing overhead to doing this, but it probably won't
 break your program, so you won't notice Coffeescript is doing it unless you
 check the code.
 
-One simple solution is to end your function with `undefined`
+If you actually wanted to return nothing, and don't want to build an array of
+results for that loop, then put `return` or `undefined` on the last line.
 
     consumePies: (pies) ->
       for p in pies
@@ -54,33 +53,6 @@ One simple solution is to end your function with `undefined`
 
 More recent versions of Coffeescript have become better at avoiding this,
 although I don't know how the decision is made.
-
-
-## There is no ternary
-
-In Javascript the ternary operator is:
-
-    condition ? result_if_true : result_if_false
-
-But in Coffeescript you must use the *longer*:
-
-    if condition then result_if_true else result_if_false
-
-However Coffeescript does have some other shortcuts which are useful in
-specific situations (e.g. the existence operator `?`).
-
-You *could* write a function to do ternary but that would be silly:
-
-    ternPre  =   (cond,a,b) -> if cond then a else b
-    ternPost = (cond,fA,fB) -> if cond then fA() else fB()
-
-    x = if x<5 then x else 10-x
-
-    x = ternPre x<5, x, 10-x             # Always evaluates both results
-
-    x = ternPost x<5, (->x), ->10-x      # Longer than if-then-else!
-
-LiveScript introduces a nice case-like `| cond = result` syntax.
 
 
 ## Using `return` to return an object literal at the end of a function
@@ -105,8 +77,8 @@ You can use `return \` but that is ugly and easy to forget.
         a: 10
         b: 20
 
-I recommend you get used to placing the object literal directly at the end
-without a return:
+I recommend you get into the habit of placing the object literal directly at
+the end without a return:
 
     myFunc = ->
       someProcessing()
@@ -218,15 +190,17 @@ But this will not:
 
     callMeLater = -> alert("Done")
 
-Because we try to use `callMeLater` before it was defined.
+Because we try to access `callMeLater` before it was defined!
 
 This would have actually worked fine in Javascript!  (Although that is not
-always advisable either: it can be dangerous inside conditional blocks.)
+always advisable either: it is
+[ambiguous](https://github.com/joeytwiddle/code/blob/master/other/javascript/snippets/declare_callback_after_passing_it.html)
+inside conditional blocks.)
 
 Unfortunately in the case above, there won't even be an error, just a big black
 nothing - fiddly to debug!
 
-So you need to do define the callback first (even though it happens last):
+So you need to define the callback first (even though it happens last):
 
     callMeLater = -> alert("Done")
 
@@ -258,9 +232,36 @@ Another option is to defer initialisation:
 
 Which is fine provided you don't want to make things available to the later
 callback which were in the scope of the `init` function.  Warning: if you use
-this pattern a lot, you may find yourself sharing the init var between scopes
-(which should not matter if used correctly, but will break things if an inner
-`init` is defined before the outer `init` is called).
+this pattern in parent and child functions, you may find yourself sharing the
+`init` var between scopes (which is often not a problem, but will break things
+if an inner `init` is defined before the outer `init` is called).
+
+
+## There is no ternary
+
+In Javascript the ternary conditional expression is:
+
+    condition ? result_if_true : result_if_false
+
+But in Coffeescript you must use the *longer*:
+
+    if condition then result_if_true else result_if_false
+
+However Coffeescript does have some other shortcuts which are useful in
+specific situations (e.g. the existence operator `?`).
+
+You *could* write a function to do ternary but that would be silly:
+
+    ternPre  =   (cond,a,b) -> if cond then a else b
+    ternPost = (cond,fA,fB) -> if cond then fA() else fB()
+
+    x = if x<5 then x else 10-x
+
+    x = ternPre x<5, x, 10-x             # Always evaluates both results
+
+    x = ternPost x<5, (->x), ->10-x      # Longer than if-then-else!
+
+LiveScript introduces a nice case-like `| cond = result` syntax.
 
 
 # Tips (not gotchas)
