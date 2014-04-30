@@ -24,8 +24,8 @@ for k,v of { a: 10, b: 20, c: 30 }
   # k='c' v=30
 ```
 
-It's not too hard to remember.  An item lives *in* a list.  Keys are properties
-*of* objects.
+It's not too hard to remember.  An item lives ***in*** a list.  Keys are properties
+***of*** objects.
 
 
 ## Accidentally returning a list comprehension
