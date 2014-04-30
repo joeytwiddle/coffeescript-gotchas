@@ -124,6 +124,14 @@ The solution is to use `print()` and `Math.random()` for the no-argument calls.
 This looks inconsistent.  Partly for that reason, I use parentheses on most of
 my function calls.
 
+    print("Hi mum")
+    print()                      # Now works fine
+    print("Y U no blank line?")
+
+    x = Math.cos(angle)
+    y = Math.sin(angle)
+    z = Math.random()            # and I didn't have to think about it!
+
 
 ## Coffeescript is greedy when parsing parameters
 
@@ -132,27 +140,35 @@ where your parameters are going, requiring extra cognition for the developer.
 Sometimes arguments you intended for one function will actually be passed to
 the other.  For example:
 
-    subtractNumbers 12, addNumbers 5,7
+    subtractNumbers 12, addNumbers 5,7         # Does that mean
 
-Is that:
+    subtractNumbers(12, addNumbers(5,7))       # this
 
-    subtractNumbers(12, addNumbers(5,7))
+    subtractNumbers(12, addNumbers(5), 7)      # or this?
 
-or:
+Since parameter parsing is greedy, not BODMAS:
 
-    subtractNumbers(12, addNumbers(5), 7)
-
-?
-
-Since function calls are greedy:
-
-    Math.sin t/77 + Math.cos t/99         # CS
+    Math.sin t/77 + Math.cos t/99         # CS, looks good
 
 becomes:
 
-    Math.sin(t / 77 + Math.cos(t / 99))   // JS
+    Math.sin(t / 77 + Math.cos(t / 99))   // JS, oh it wasn't good!
 
 I find using brackets is clearer and avoids any ambiguity.
+
+
+## You will need brackets sooner or later anyway
+
+When you have a complex expression, you will need brackets anyway.  So your
+choice comes down to:
+
+    Math.sin(t/77) + Math.cos(t/99)       # Looks like Javascript
+
+    (Math.sin t/77) + (Math.cos t/99)     # Looks like Lisp
+
+Perhaps you like your code to look like Lisp, in which case, go ahead!  But
+since CS lives in the JS world, I like to keep the expressions looking the
+same.
 
 
 ## When to skip brackets
@@ -163,7 +179,7 @@ a "trailing callback" (when you pass a callback function as the last argument):
     fs.readFile filename, (err,contents) ->
       console.log "Contents of #{filename} are:", contents
 
-In this case if you have used brackets for the call to `console` you would need
+In this case if you had used brackets for the callback function, you would need
 an extra line at the end with just the closing `)`.  Yuck!
 
 
@@ -206,8 +222,8 @@ So you need to define the callback first (even though it happens last):
 
     setTimeout( callMeLater , 2000 )
 
-In other words, you must write your code backwards!  This messes up the flow
-when reading.
+In other words, you must write your code backwards!  This messes up the
+**flow** when reading (and writing) the code.
 
 One way to avoid this: don't name your callbacks unless you have to, just
 define them inline.
