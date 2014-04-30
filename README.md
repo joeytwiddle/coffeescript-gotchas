@@ -179,7 +179,7 @@ a "trailing callback" (when you pass a callback function as the last argument):
     fs.readFile filename, (err,contents) ->
       console.log "Contents of #{filename} are:", contents
 
-In this case if you had used brackets for the callback function, you would need
+In this case if you had used brackets for the `readFile` call, you would need
 an extra line at the end with just the closing `)`.  Yuck!
 
 
