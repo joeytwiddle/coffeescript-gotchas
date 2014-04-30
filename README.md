@@ -4,10 +4,6 @@ These are some of the things that tripped me up when I started to write
 Coffeescript.  They may be useful to new Coffeescript developers.
 
 
-* auto-gen TOC:
-{:toc}
-
-
 ## Coffeescript's `for..in` is *not* Javascript's `for..in`!
 
 Don't use Coffeescript's `for .. in` for Objects, even though you would have
