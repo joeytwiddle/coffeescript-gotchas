@@ -27,6 +27,9 @@ for k,v of { a: 10, b: 20, c: 30 }
 It's not too hard to remember.  An item lives ***in*** a list.  Keys are properties
 ***of*** objects.
 
+Another way to remember is that it's the exact *opposite* way around to ES6's
+`for...of` and Javascript's traditional `for...in`.
+
 
 ## Accidentally returning a list comprehension
 
