@@ -47,12 +47,12 @@ break your program, so you won't notice Coffeescript is doing it unless you
 check the code.
 
 If you actually wanted to return nothing, and don't want to build an array of
-results for that loop, then put `return` or `undefined` on the last line.
+results for that loop, then put `return` (or `undefined`) on the last line.
 
     consumePies: (pies) ->
       for p in pies
         p.consume()
-      undefined
+      return
 
 More recent versions of Coffeescript have become better at avoiding this,
 although I don't know how the decision is made.
