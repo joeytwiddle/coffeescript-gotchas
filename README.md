@@ -24,11 +24,11 @@ for k,v of { a: 10, b: 20, c: 30 }
   # k='c' v=30
 ```
 
-It's not too hard to remember.  An item lives ***in*** a list.  Keys are properties
+You could use this to remember:  An item lives ***in*** a list.  Keys are properties
 ***of*** objects.
 
 Another way to remember is that it's the exact *opposite* way around to ES6's
-`for...of` and Javascript's traditional `for...in`.
+`for...of` and Javascript's traditional `for...in`!
 
 
 ## Accidentally returning a list comprehension
@@ -54,19 +54,16 @@ results for that loop, then put `return` (or `undefined`) on the last line.
         p.consume()
       return
 
-More recent versions of Coffeescript have become better at avoiding this,
-although I don't know how the decision is made.
-
 
 ## Using `return` to return an object literal at the end of a function
 
 This can cause you more trouble than it's worth.
 
-    myFunc = ->
+    getPosition = ->
       someProcessing()
       return
-        a: 10
-        b: 20
+        x: 10
+        y: 20
 
 In earlier versions of Coffeescript, this will simply return `undefined`, not
 the object!  It processes `return` as a single statement.  (It's like semicolon
@@ -74,20 +71,20 @@ injection all over again!)
 
 You can use `return \` but that is ugly and easy to forget.
 
-    myFunc = ->
+    getPosition = ->
       someProcessing()
       return \              # Works but just NO!
-        a: 10
-        b: 20
+        x: 10
+        y: 20
 
 I recommend you get into the habit of placing the object literal directly at
 the end without a return:
 
-    myFunc = ->
+    getPosition = ->
       someProcessing()
 
-      a: 10
-      b: 20
+      x: 10
+      y: 20
 
 Yes that is how Coffeescript does it!  The empty line is optional but I find it
 clearer.
@@ -99,12 +96,13 @@ If, inside a function, you assign a variable which was declared somewhere above
 the function, no local variable will be created, but the outer variable will be
 assigned.
 
-This can trip you up if you aren't careful, and has been the subject of some
-debate.
+This can trip you up if you aren't careful, and has been the subject of [some](http://stackoverflow.com/questions/15223430/why-is-coffeescript-of-the-opinion-that-shadowing-is-a-bad-idea#15228602)
+[debate](https://github.com/jashkenas/coffeescript/issues/2697).
 
-How to avoid issues?  When you introduce a new variable, consider searching to
-see if it has been used anywhere else in the file (specifically in a parent or
-child scope of the current scope).
+How to avoid issues?  When you introduce a new variable, search to see if it
+has been used anywhere else in the file (specifically in a parent or child
+scope of the current scope).  If it is already used, then choose a unique
+name for your new variable (or rename the existing one).
 
 
 ## Arguments may be passed without brackets - is that good?
@@ -149,7 +147,7 @@ the other.  For example:
 
     subtractNumbers(12, addNumbers(5), 7)      # or this?
 
-Since parameter parsing is greedy, not BODMAS:
+Since parameter parsing is greedy, not [BODMAS](https://en.wikipedia.org/wiki/Order_of_operations):
 
     Math.sin t/77 + Math.cos t/99         # CS, looks good
 
@@ -169,9 +167,9 @@ choice comes down to:
 
     (Math.sin t/77) + (Math.cos t/99)     # Looks like Lisp
 
-Perhaps you like your code to look like Lisp, in which case, go ahead!  But
-since CS lives in the JS world, I like to keep the expressions looking the
-same.
+Perhaps you like your code to look like Lisp, in which case, go ahead!  For
+me, since CS lives in the JS world, I like to keep the expressions looking
+the same.
 
 
 ## When to skip brackets
@@ -183,16 +181,19 @@ a "trailing callback" (when you pass a callback function as the last argument):
       console.log "Contents of #{filename} are:", contents
 
 In this case if you had used brackets for the `readFile` call, you would need
-an extra line at the end with just the closing `)`.  Yuck!
+an extra line at the end with just the closing `)`.  Heinous!
 
+    fs.readFile(filename, (err,contents) ->
+      console.log "Contents of #{filename} are:", contents
+    )
 
 ## Plus means something special if unevenly padded
 
-    a + "," + b      =>      a + "," + b;
+    a + ',' + b      =>      a + ',' + b;
 
-    a+","+b          =>      a + "," + b;
+    a+','+b          =>      a + ',' + b;
 
-    a +","+ b        =>      a(+"," + b);   // oops!
+    a +','+ b        =>      a(+',' + b);   // oops!
 
 
 ## You are forced to declare your callbacks in reverse
@@ -209,25 +210,24 @@ This will work:
 
 But this will not:
 
-    setTimeout( callMeLater , 2000 )
+    setTimeout(callMeLater, 2000)
 
     callMeLater = -> alert("Done")
 
-Because we try to access `callMeLater` before it was assigned!
+Why not?  Because we try to access `callMeLater` before it was assigned!
 
-This would have actually worked fine in Javascript.  (Although that is not
-always advisable either: it is
-[ambiguous](https://github.com/joeytwiddle/code/blob/master/other/javascript/snippets/declare_callback_after_passing_it.html)
-inside conditional blocks.)
+This would have actually worked fine in Javascript, because declared functions
+get [*hoisted*](https://en.wikipedia.org/wiki/JavaScript_syntax#hoisting) to the
+top of their scope.
 
-Unfortunately in the case above, there won't even be an error, just a big black
-nothing - fiddly to debug!
+Unfortunately in the case above, there won't even be an error: `setTimeout` will
+be called with `undefined` and just do nothing - fiddly to debug!
 
 So you need to define the callback first (even though it happens last):
 
     callMeLater = -> alert("Done")
 
-    setTimeout( callMeLater , 2000 )
+    setTimeout(callMeLater, 2000)
 
 In other words, you must write your code backwards!  This messes up the
 **flow** when reading (and writing) the code.
@@ -240,24 +240,23 @@ define them inline.
 Another way is to follow the first example above, and make an extra anonymous
 callback function that calls your named function.
 
-    setTimeout( callMeLater , 2000 )        # The problem version
+    setTimeout(callMeLater, 2000)           # The problem version
 
-    setTimeout( -> callMeLater() , 2000 )   # Safe but less efficient
+    setTimeout( -> callMeLater() , 2000 )   # The safe version (less efficient)
 
 Another option is to defer initialisation:
 
     init = ->
-      setTimeout( callMeLater, 2000 )
+      setTimeout(callMeLater, 2000)
 
     callMeLater = -> alert("Done")
 
     init()
 
-Which is fine provided you don't want to make things available to the later
-callback which were in the scope of the `init` function.  Warning: if you use
-this pattern in parent and child functions, you may find yourself sharing the
-`init` var between scopes (which is often not a problem, but will break things
-if an inner `init` is defined before the outer `init` is called).
+Which is ok provided you: don't put things in the `init` function which the
+callback will need to access later, and if using the pattern a lot, be
+careful that the `init = ->` of an inner scope does not *overwrite* the
+`init` of an outer scope *before* the outer `init` has been called!
 
 
 ## There is no ternary
@@ -273,18 +272,7 @@ But in Coffeescript you must use the *longer*:
 However Coffeescript does have some other shortcuts which are useful in
 specific situations (e.g. the existence operator `?`).
 
-You *could* write a function to do ternary but that would be silly:
-
-    ternPre  =   (cond,a,b) -> if cond then a else b
-    ternPost = (cond,fA,fB) -> if cond then fA() else fB()
-
-    x = if x<5 then x else 10-x
-
-    x = ternPre x<5, x, 10-x             # Always evaluates both results
-
-    x = ternPost x<5, (->x), ->10-x      # Longer than if-then-else!
-
-LiveScript introduces a nice case-like `| cond = result` syntax.
+(LiveScript introduces a nice Haskell-like `| cond = result` syntax.)
 
 
 # Tips (not gotchas)
@@ -309,14 +297,15 @@ You can avoid the brackets by using the `do` keyword:
 
 I wrote a
 [helpful Vim plugin](https://github.com/joeytwiddle/rc_files/blob/master/.vim/ftplugin/coffee.vim)
-that assists when writing Coffeescript.  Each time you save the file, it shows
-what **changes** were made to the compiled JS file as a diff.  I hope it can
-help!
+that assists when learning Coffeescript.  Each time you save the file, it shows
+**what new changes** were made to the compiled JS file, as an diff in the
+preview window.  It can help when experimenting with Coffeescript, to glance
+and ensure the output is what you expected it to be.
 
 One other small gotcha is **accidentally editing** the compiled JS file instead
-of the source CS file.  (I occasionally do that when I have opened the JS file
-to inspect a line number reported in a runtime error.)  To avoid making that
-mistake, I have
+of the source CS file.  (I occasionally did that, before sourcemaps, when I
+opened the JS file to inspect a line number reported in a runtime error.)  To
+avoid making that mistake, I have
 [another little vim script](https://github.com/joeytwiddle/rc_files/blob/master/.vim/ftplugin/javascript.vim)
 which makes the JS file un-editable if the "Generated by Coffeescript" message
 is detected at the top.
