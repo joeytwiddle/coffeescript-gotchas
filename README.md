@@ -13,22 +13,22 @@ done that in Javascript.
 - Use Coffeescript's `for .. of` for **Objects**.
 
 ```
-for i,o in [ 'a', 'b', 'c' ]
+for i,o in ['a', 'b', 'c']
   # i=0 o='a'
   # i=1 o='b'
   # i=2 o='c'
 
-for k,v of { a: 10, b: 20, c: 30 }
+for k,v of {a: 10, b: 20, c: 30}
   # k='a' v=10
   # k='b' v=20
   # k='c' v=30
 ```
 
-You could use this to remember:  An item lives ***in*** a list.  Keys are properties
-***of*** objects.
+You could use this mnemonic to remember:  An item lives ***in*** a list.  Keys
+are properties ***of*** objects.
 
-Another way to remember is that it's the exact *opposite* way around to ES6's
-`for...of` and Javascript's traditional `for...in`!
+Or another way to remember is that it's the exact ***opposite*** way around to
+Javascript's traditional `for...in` and ES6's `for...of`!
 
 
 ## Accidentally returning a list comprehension
@@ -47,27 +47,33 @@ break your program, so you won't notice Coffeescript is doing it unless you
 check the code.
 
 If you actually wanted to return nothing, and don't want to build an array of
-results for that loop, then put `return` (or `undefined`) on the last line.
+results for that loop, then put `return` on the last line.
 
     consumePies: (pies) ->
       for p in pies
         p.consume()
       return
 
+Alternatively, put `@` on the last line to return `this`, which will present
+a [fluent interface](https://en.wikipedia.org/wiki/Fluent_interface) to the
+caller.
+
 
 ## Using `return` to return an object literal at the end of a function
 
-This can cause you more trouble than it's worth.
+If you want to return an object with properties, this is NOT the right way:
 
+    # BROKEN
+    
     getPosition = ->
       someProcessing()
       return
         x: 10
         y: 20
 
-In earlier versions of Coffeescript, this will simply return `undefined`, not
-the object!  It processes `return` as a single statement.  (It's like semicolon
-injection all over again!)
+This will simply return `undefined`, not the object!
+It processes `return` as a single statement.
+(Argh, it's like semicolon injection all over again!)
 
 You can use `return \` but that is ugly and easy to forget.
 
@@ -78,7 +84,7 @@ You can use `return \` but that is ugly and easy to forget.
         y: 20
 
 I recommend you get into the habit of placing the object literal directly at
-the end without a return:
+the end, without a return:
 
     getPosition = ->
       someProcessing()
